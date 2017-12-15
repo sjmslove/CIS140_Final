@@ -1,0 +1,81 @@
+#!/usr/bin/perl
+##Assignment: Final
+
+use strict;
+use 5.16.3;
+use warnings;
+
+my ($string, $continue);
+my $length = (length($string));
+my $guessed = $string;
+my $letter;
+my $turns = 0;
+
+use constant YES => 1;
+
+sub main  {
+        askWord();
+        setContinue();
+        if ($continue == YES){
+                setGuesses();
+        }
+}
+
+main();
+
+sub askWord  {
+        if (defined $string) {
+                $string = 0;
+                while ($string !~ /^[a-zA-Z]{5,20}$/x) {
+                        say "please enter a word with at least 5 letters.";
+                        chomp ($string = <STDIN>);
+                        if ($string !~ /^[a-zA-Z]{5,20}$/x) {
+                                say "\nInvalid Input";
+                                sleep 2;
+                                system ("clear");
+                        }
+                }
+        }  else {
+                        $string =0;
+        }
+        print "$string";
+}
+sub setContinue {
+     if (defined $continue) {
+                $continue = -1;
+                while ($continue !~ /[0-9]/ || $continue > 1 || $continue < 0) {
+                        print "\n\nDo you want to continue (0=no, 1=yes)? ";
+                        chomp ($continue = <STDIN>);
+                        if ($continue !~ /[0-9]/ || $continue > 1 || $continue < 0) {
+                                say "Incorrect input. Please try again";
+                                sleep 1;
+                                system ("clear");
+                        }
+                }
+     } else {
+          $continue = 1;
+     }
+}
+
+sub setGuesses {
+        while ($turns => 0) {
+                print "you have used $turns turns.";
+                print " guess a letter: ";
+                chomp ( $letter = <STDIN>) ;
+                $guessed = ~s/$letter/*/g;
+                for (my $x =0; $x <=$length; $x++){
+                        if(substr($guessed, $x, 1) eq "*") {
+                        print substr($string, $x, 1);
+                        } else {
+                                print "*" unless (substr ($string, $x, 1) eq " ");
+                                print " " if (substr($string,$x,1) eq " ");
+                        }
+                }
+                if ($turns == 6){
+                        print "your man has been hung";
+                }
+                $turns = $turns - 1;
+        }
+        #print "Guessed Correctly!";
+
+}
